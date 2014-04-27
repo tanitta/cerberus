@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "drawer.h"
+#include "analyzer.h"
 class ofApp : public ofBaseApp{
 
 	public:
@@ -20,4 +21,5 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
 		cerberus::Drawer drawer;
+		cerberus::Analyzer analyzer;
 };

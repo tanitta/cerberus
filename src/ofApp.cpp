@@ -4,16 +4,18 @@
 void ofApp::setup(){
 	ofSetWindowTitle("cerberus");
 	drawer.setup();
+	analyzer.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	analyzer.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	drawer.draw();
+	analyzer.draw();
 }
 
 //--------------------------------------------------------------
