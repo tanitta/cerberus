@@ -5,5 +5,14 @@
 			"follow_symlinks": true,
 			"path": "."
 		}
-	]
+	],
+	"settings":
+	{
+		// "sublimeclang_enable_fast_completions": true,
+		"sublimeclang_options":
+		[
+				"-IF:/Users/tanitta/Documents/Program/of_v0.8.1_vs_release/libs/openFrameworks/",
+				"-IF:/Users/tanitta/Documents/Program/of_v0.8.1_vs_release/libs/openFrameworks/*",
+		]
+	}
 }
