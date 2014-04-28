@@ -13,6 +13,7 @@
 		[
 				"-IF:/Users/tanitta/Documents/Program/of_v0.8.1_vs_release/libs/openFrameworks/",
 				"-IF:/Users/tanitta/Documents/Program/of_v0.8.1_vs_release/libs/openFrameworks/*",
+				"-IF:/Users/tanitta/Documents/Program/of_v0.8.1_vs_release/addons/ofxOpenCv/src/",
 		]
 	}
 }
