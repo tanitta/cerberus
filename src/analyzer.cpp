@@ -73,7 +73,7 @@ namespace cerberus{
 	void Analyzer::ConvertMonoqloImage(){
 		ofImgInputGray = ofImgInput;
 		ofImgInputGray.invert();
-		ofImgInputGray.threshold(50);
+		ofImgInputGray.threshold(5);
 		// cvNot(ocImgInput, ocImgInput);
 		// cvCvtColor(ocImgInput, ocImgInputGray, CV_BGR2GRAY);
 		// cvThreshold(ocImgInputGray, ocImgInputGray, 5, 255, CV_THRESH_BINARY);
@@ -114,10 +114,12 @@ namespace cerberus{
 		// ofImgX = ocImgXDebug;
 		// ofImgY = ocImgYDebug;
 		// ofImgZ = ocImgZDebug;
-		
-		contourFinderX.findContours(ofImgX, 1, ofImgX.width * ofImgX.height, 10, false, false);
-		contourFinderY.findContours(ofImgY, 1, ofImgY.width * ofImgY.height, 10, false, false);
-		contourFinderZ.findContours(ofImgZ, 1, ofImgZ.width * ofImgZ.height, 10, false, false);
+		ofImgX.dilate();
+		ofImgY.dilate();
+		ofImgZ.dilate();
+		contourFinderX.findContours(ofImgX, 1, ofImgX.width * ofImgX.height, 50, false, true);
+		contourFinderY.findContours(ofImgY, 1, ofImgY.width * ofImgY.height, 50, false, true);
+		contourFinderZ.findContours(ofImgZ, 1, ofImgZ.width * ofImgZ.height, 50, false, true);
 	};
 	void Analyzer::Debug(){
 		//debug
