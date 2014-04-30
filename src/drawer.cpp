@@ -9,8 +9,9 @@ namespace cerberus{
 	};
 	void Drawer::update(){};
 	void Drawer::draw(){
-		camera.begin();
-			ofDrawGridPlane(50,50,true);
-		camera.end();
+		// camera.begin();
+		// 	ofSetColor(0, 0, 0);
+		// 	ofDrawGrid(100,10,true,false,true,false);
+		// camera.end();
 	};
 }

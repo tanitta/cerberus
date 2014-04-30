@@ -11,9 +11,14 @@ namespace cerberus{
 		
 		void setup();
 		void update();
-		void draw();
+		void draw2D();
+		void draw3D();
 		
-		ofVideoGrabber videoCam;
+		
+		// ofPoint GetPosCamX();
+		// ofPoint GetPosCamY();
+		// ofPoint GetPosCamZ();
+		
 	private:
 		int sizeCamW;
 		int sizeCamH;
@@ -24,37 +29,26 @@ namespace cerberus{
 		bool isDebug;
 		
 		void ReceiveImage();
-		void ConvertMonoqloImage();
-		void SeparateImage();
-		void LabelImage();
-
+		ofVideoGrabber videoCam;
 		ofxCvColorImage ofImgInput;
+		
+		void ConvertMonoqloImage();
 		ofxCvGrayscaleImage ofImgInputGray;
 		
-		ofxCvContourFinder contourFinderX; 
-		ofxCvContourFinder contourFinderY; 
-		ofxCvContourFinder contourFinderZ; 
-		
-		
-		//oC関係の宣言
-		// IplImage *frameImage;//中間処理用のoCの画像
-		
-		// IplImage *ocImgInput;
-		// IplImage *ocImgInputGray;
-
-		// IplImage *ocImgX;
-		// IplImage *ocImgY;
-		// IplImage *ocImgZ;
-
-		// IplImage *ocImgXDebug;
-		// IplImage *ocImgYDebug;
-		// IplImage *ocImgZDebug;
-		
+		void SeparateImage();
 		ofxCvGrayscaleImage ofImgX;//for Debugs
 		ofxCvGrayscaleImage ofImgY;
 		ofxCvGrayscaleImage ofImgZ;
 		
-		// vector<ofPoint> pointA,pointB;
+		void LabelImage();
+		ofxCvContourFinder contourFinderX; 
+		ofxCvContourFinder contourFinderY; 
+		ofxCvContourFinder contourFinderZ; 
+
+		void LinerAnalyze();
+		ofPoint posCamX,posCamY,posCamZ;
+		double radZoomX,radZoomY,radZoomZ;
+		vector<ofPoint> vecX,vecY,vecZ;
 		
 	};
 }

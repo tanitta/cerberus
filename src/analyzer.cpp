@@ -18,16 +18,12 @@ namespace cerberus{
 		ofImgY.allocate(sizeImage,sizeImage);
 		ofImgZ.allocate(sizeImage,sizeImage);
 		
-		// ocImgInput = cvCreateImage(cvSize(sizeCamW, sizeCamH), IPL_DEPTH_8U, 3);
-		// ocImgInputGray = cvCreateImage(cvSize(sizeCamW, sizeCamH), IPL_DEPTH_8U, 1);
-
-		// ocImgX = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 1);
-		// ocImgY = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 1);
-		// ocImgZ = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 1);
-
-		// ocImgXDebug = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 3);
-		// ocImgYDebug = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 3);
-		// ocImgZDebug = cvCreateImage(cvSize(sizeImage, sizeImage), IPL_DEPTH_8U, 3);
+		posCamX.set(2000,0,0);
+		posCamY.set(0,2000,0);
+		posCamZ.set(0,0,2000);
+		radZoomX = 10.0*PI/180.0;
+		radZoomY = 10.0*PI/180.0;
+		radZoomZ = 10.0*PI/180.0;
 	};
 	void Analyzer::update(){
 		videoCam.update();
@@ -37,29 +33,34 @@ namespace cerberus{
 			SeparateImage();
 			LabelImage();
 			
-			// for (int i = 0; i < contourFinderX.nBlobs; i++){
-			// 	//contourFinderX.blobs[i].centroid.x;
-			// }
+			LinerAnalyze();
+			
 			if (isDebug)
 			{
 			}
 		}
 	};
-	void Analyzer::draw(){
+	void Analyzer::draw2D(){
 		if (videoCam.isFrameNew()){
 			if (isDebug)
 			{
 			}
 		}
-		// for (int i = 0; i < contourFinderX.nBlobs; i++){
-		// 	ofPushMatrix();
-		// 	contourFinderX.blobs[i].draw(0,0);
-		// 	ofFill();
-		// 	ofSetColor(500, 0, 0);
-		// 	ofEllipse(contourFinderX.blobs[i].centroid.x, contourFinderX.blobs[i].centroid.y, 4, 4);
-		// 	ofPopMatrix();
-		// }
-		
+		for (int i = 0; i < contourFinderY.nBlobs; i++){
+			ofPushMatrix();
+			contourFinderY.blobs[i].draw(0,0);
+			ofFill();
+			ofSetColor(500, 0, 0);
+			ofEllipse(contourFinderY.blobs[i].centroid.x, contourFinderY.blobs[i].centroid.y, 4, 4);
+			ofPopMatrix();
+		}
+	};
+	void Analyzer::draw3D(){
+		//lineY
+		cout<<"vecY.size : "<<vecY.size()<<"\n";
+		for (int i = 0; i < vecY.size(); i++){
+			ofLine(vecY[i],posCamY);
+		}
 	};
 	
 	void Analyzer::ReceiveImage(){
@@ -94,5 +95,38 @@ namespace cerberus{
 		contourFinderX.findContours(ofImgX, 1, ofImgX.width * ofImgX.height, 50, false, true);
 		contourFinderY.findContours(ofImgY, 1, ofImgY.width * ofImgY.height, 50, false, true);
 		contourFinderZ.findContours(ofImgZ, 1, ofImgZ.width * ofImgZ.height, 50, false, true);
+	};
+	void Analyzer::LinerAnalyze(){
+		// vecX.clear();
+		// for (int i = 0; i < contourFinderX.nBlobs; i++){
+		// 	double xh, yh, l;
+		// 	xh = ((double)contourFinderX.blobs[i].centroid.x - (double)sizeImage*0.5)/(double)sizeImage*0.5;
+		// 	yh = ((double)contourFinderX.blobs[i].centroid.y - (double)sizeImage*0.5)/(double)sizeImage*0.5;
+		// 	l = 1.0/tan(radZoomX);
+			
+		// 	double x,y,z;
+		// 	x = -2000.0;
+			
+		// 	y = yh/l*x;
+		// 	z = xh/l*x;
+			
+		// 	vecX.push_back(ofPoint(x, y, z));
+		// }
+		
+		vecY.clear();
+		for (int i = 0; i < contourFinderY.nBlobs; i++){
+			double xh, yh, l;
+			xh = ((double)contourFinderY.blobs[i].centroid.x - (double)sizeImage*0.5)/(double)sizeImage*0.5;
+			yh = ((double)contourFinderY.blobs[i].centroid.y - (double)sizeImage*0.5)/(double)sizeImage*0.5;
+			l = 1.0/tan(radZoomX);
+			
+			double x,y,z;
+			y = -2000.0;
+			
+			x = xh/l*(y-posCamY.y);
+			z = yh/l*(y-posCamY.y);
+			
+			vecY.push_back(ofPoint(x, y, z));
+		}
 	};
 }

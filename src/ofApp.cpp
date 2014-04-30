@@ -5,6 +5,10 @@ void ofApp::setup(){
 	ofSetWindowTitle("cerberus");
 	drawer.setup();
 	analyzer.setup();
+	
+	ofEnableDepthTest();
+	ofEnableAntiAliasing();
+	
 }
 
 //--------------------------------------------------------------
@@ -14,8 +18,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	drawer.draw();
-	analyzer.draw();
+	// drawer.draw();
+	analyzer.draw2D();
+	camera.begin();
+			ofSetColor(0, 0, 0);
+			ofDrawGrid(100,10,true,false,true,false);
+			analyzer.draw3D();
+	camera.end();
 }
 
 //--------------------------------------------------------------
