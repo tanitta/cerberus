@@ -50,5 +50,17 @@ namespace cerberus{
 		double radZoomX,radZoomY,radZoomZ;
 		vector<ofPoint> vecX,vecY,vecZ;
 		
+		void LineMatch();
+		
+		bool Calc2LineNearestDistAndPos(
+			ofPoint* pp1,
+			ofPoint* pv1,
+			ofPoint* pp2,
+			ofPoint* pv2,
+			float* pOut_dist,
+			ofPoint* pOut_pos1,
+			ofPoint* pOut_pos2
+		);
+		
 	};
 }
