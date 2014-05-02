@@ -51,12 +51,15 @@ namespace cerberus{
 		vector<ofPoint> vecX,vecY,vecZ;
 		
 		void LineMatch();
+		double maxDist;
+		vector<ofPoint> posTargets;
+		
 		
 		bool Calc2LineNearestDistAndPos(
-			ofPoint* pp1,
-			ofPoint* pv1,
-			ofPoint* pp2,
-			ofPoint* pv2,
+			ofPoint pp1,
+			ofPoint pv1,
+			ofPoint pp2,
+			ofPoint pv2,
 			float* pOut_dist,
 			ofPoint* pOut_pos1,
 			ofPoint* pOut_pos2

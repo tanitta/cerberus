@@ -61,21 +61,29 @@ namespace cerberus{
 	};
 	void Analyzer::draw3D(){
 		//lineY
-		cout<<"vecY.size : "<<vecY.size()<<"\n";
+		// cout<<"vecY.size : "<<vecY.size()<<"\n";
 		ofSetColor(255, 127, 127);
 		for (int i = 0; i < vecX.size(); i++){
-			ofLine(vecX[i],posCamX);
+			// ofLine(vecX[i]*2000+posCamX,posCamX);
+			ofLine(vecX[i]*2000,ofPoint(0,0,0));
 		}
 		
 		ofSetColor(127, 255, 127);
 		for (int i = 0; i < vecY.size(); i++){
-			ofLine(vecY[i],posCamY);
+			ofLine(vecY[i]*2000+posCamY,posCamY);
 		}
 		
 		ofSetColor(127, 127, 255);
 		for (int i = 0; i < vecZ.size(); i++){
-			ofLine(vecZ[i],posCamZ);
+			ofLine(vecZ[i]*2000+posCamZ,posCamZ);
 		}
+		
+		ofSetColor(0, 0, 0);
+		for (int i = 0; i < posTargets.size(); i++){
+			ofCircle(posTargets[i], 4);
+		}
+		ofLine(ofPoint(0,2,0),ofPoint(0,2,0)+ofPoint(4,0,6).normalize());
+		ofLine(ofPoint(0,3,0),ofPoint(0,3,0)+ofPoint(5,0,6).normalize());
 	};
 	
 	void Analyzer::ReceiveImage(){
@@ -113,23 +121,23 @@ namespace cerberus{
 	};
 	
 	bool Analyzer::Calc2LineNearestDistAndPos(
-			ofPoint* pp1,
-			ofPoint* pv1,
-			ofPoint* pp2,
-			ofPoint* pv2,
+			ofPoint pp1,
+			ofPoint pv1,
+			ofPoint pp2,
+			ofPoint pv2,
 			float* pOut_dist,
 			ofPoint* pOut_pos1,
 			ofPoint* pOut_pos2
 	){
 		ofPoint v1, v2;
-		ofPoint &p1 = *pp1, &p2 = *pp2;
+		ofPoint p1 = pp1, p2 = pp2;
 		
 		// // D3DXVec3Normalize( &v1, pv1 );
 		// // D3DXVec3Normalize( &v2, pv2 );
 		
-		v1 = pv1->normalize();
-		v2 = pv2->normalize();
-
+		v1 = pv1.normalize();
+		v2 = pv2.normalize();
+		
 		// // float D1 = D3DXVec3Dot( &(p2 - p1), &v1 );
 		// // float D2 = D3DXVec3Dot( &(p2 - p1), &v2 );
 		
@@ -187,7 +195,7 @@ namespace cerberus{
 			y = yh/l*(x);
 			z = -xh/l*(x);
 			
-			vecX.push_back(ofPoint(x*4000, y*4000, z*4000));
+			vecX.push_back(ofPoint(x, y, z).normalize());
 		}
 		
 		vecY.clear();
@@ -203,7 +211,7 @@ namespace cerberus{
 			x = xh/l*(y);
 			z = -yh/l*(y);
 			
-			vecY.push_back(ofPoint(x*4000, y*4000, z*4000));
+			vecY.push_back(ofPoint(x, y, z).normalize());
 		}
 		
 		vecZ.clear();
@@ -219,22 +227,73 @@ namespace cerberus{
 			x = xh/l*(z);
 			y = yh/l*(z);
 			
-			vecZ.push_back(ofPoint(x*4000, y*4000, z*4000));
+			vecZ.push_back(ofPoint(x, y, z).normalize());
 		}
 	};
 	
 	void Analyzer::LineMatch(){
+		maxDist = 2;
+		posTargets.clear();
+		
 		float dist;
 		ofPoint pos1;
 		ofPoint pos2;
+		bool isSuccess;
+		
+		for (int i = 0; i < vecX.size(); ++i)
+		{
+			bool flag = false;
+			for (int j = 0; j < vecY.size(); ++j)
+			{
+				isSuccess = Calc2LineNearestDistAndPos(
+					posCamX,
+					vecX[i],
+					posCamY,
+					vecY[j],
+					&dist,
+					&pos1,
+					&pos2
+				);
+				cout<<"dist : "<<dist<<" i : "<<i<<"\n";
+				// cout<<"x:"<<pos1.x<<" y:"<<pos1.y<<" z:"<<pos1.z<<"\n";
+				if(isSuccess&&(dist<maxDist)){
+					for (int k = 0; k < vecZ.size(); ++k)
+					{
+						// cout<<"2match! : "<<i<<" & "<<j<<"\n";
+						isSuccess = Calc2LineNearestDistAndPos(
+							posCamY,
+							vecY[j],
+							posCamZ,
+							vecZ[k],
+							&dist,
+							&pos1,
+							&pos2
+						);
+						if(isSuccess&&(dist<maxDist)){
+							posTargets.push_back((pos1+pos2)/2);
+							flag = true;
+							break;
+						}
+					}
+				}
+				if (flag)
+				{
+					flag = false;
+					break;
+				}
+			}
+		}
+		
 		Calc2LineNearestDistAndPos(
-			&ofPoint(1,2,3),
-			&ofPoint(4,5,6),
-			&ofPoint(2,3,4),
-			&ofPoint(5,6,7),
+			ofPoint(0,2,0),
+			ofPoint(4,0,6),
+			ofPoint(0,3,0),
+			ofPoint(5,0,6),
 			&dist,
 			&pos1,
 			&pos2
 		);
+		// cout<<"dist : "<<dist<<"\n";
+		
 	};
 }
